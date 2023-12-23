@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XOXO Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .game {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        gap: 10px;
+      }
+      .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        border: 1px solid #000;
+        transition: background-color 0.3s;
+      }
+      .box:hover {
+        background-color: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game"></div>
+    <script>
+      const game = document.querySelector(".game");
+      let player = "X";
+      let count = 0;
+
+      function createBoard() {
+        for (let i = 0; i < 9; i++) {
+          const box = document.createElement("div");
+          box.classList.add("box");
+          box.setAttribute("onclick", "makeMove(this)");
+          box.id = "box" + i;
+          game.appendChild(box);
+        }
+      }
+
+      function makeMove(box) {
+        if (box.textContent === "") {
+          box.textContent = player;
+          player = player === "X" ? "O" : "X";
+          count++;
+          checkWinner();
+        }
+      }
+
+      function checkWinner() {
+        const winningCombinations = [
+          ["box0", "box1", "box2"],
+          ["box3", "box4", "box5"],
+          ["box6", "box7", "box8"],
+          ["box0", "box3", "box6"],
+          ["box1", "box4", "box7"],
+          ["box2", "box5", "box8"],
+          ["box0", "box4", "box8"],
+          ["box2", "box4", "box6"],
+        ];
+
+        for (let i = 0; i < winningCombinations.length; i++) {
+          const combo = winningCombinations[i];
+          const a = document.getElementById(combo[0]).textContent;
+          const b = document.getElementById(combo[1]).textContent;
+          const c = document.getElementById(combo[2]).textContent;
+
+          if (a === b && b === c && a !== "") {
+            alert(`Player ${a} wins!`);
+            count = 0;
+            game.innerHTML = "";
+            createBoard();
+            break;
+          } else if (count === 9) {
+            alert("It's a tie!");
+            count = 0;
+            game.innerHTML = "";
+            createBoard();
+            break;
+          }
+        }
+      }
+
+      createBoard();
+    </script>
+  </body>
+</html>
